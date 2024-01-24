@@ -8,9 +8,11 @@ app = FastAPI()
 def initialize_model():
     if torch.cuda.is_available():
         # CUDAが利用可能な場合、CUDAデバイスを使用
+        print("CUDA is available")
         return WhisperModel("large-v3", device="cuda", compute_type="float16")
     else:
         # CUDAが利用不可の場合、CPUを使用し、利用可能な最大スレッド数を設定
+        print("CUDA is not available or not enabled")
         cpu_threads = os.cpu_count()
         return WhisperModel("large-v3", device="cpu", compute_type="int8", cpu_threads=cpu_threads)
 
@@ -34,12 +36,5 @@ async def transcribe_audio(file_path: str = Query(..., description="The path to 
     result = "Detected language '%s' with probability %f\n" % (info.language, info.language_probability)
     for segment in segments:
         result += "[%.2fs -> %.2fs] %s\n" % (segment.start, segment.end, segment.text)
-
-    # ファイルの削除
-    # try:
-    #     os.remove(file_path)
-    # except OSError as e:
-    #     # ファイル削除時のエラーハンドリング
-    #     return {"error": f"Failed to delete file: {str(e)}"}
 
     return {"transcription": result}
