@@ -1,7 +1,8 @@
-from fastapi import FastAPI, UploadFile, File
+from fastapi import FastAPI, UploadFile, File, Form
 from faster_whisper import WhisperModel
 import torch
 import os
+import io
 
 app = FastAPI()
 
@@ -18,13 +19,20 @@ def initialize_model():
 model = initialize_model()
 
 @app.post("/transcribe")
-async def transcribe_audio(file: UploadFile = File(...)):
+async def transcribe_audio(file: UploadFile = Form(...)):
     try:
         print("file type:", type(file))
         print("file name:", file.filename)
-        # UploadFileのfileオブジェクトをそのまま使用
+        print("file content_type:", file.content_type)
+        # ファイルの内容をバイナリデータとして読み込む
+        file_content = await file.read()
+
+        # バイナリデータをBinaryIOオブジェクトに変換
+        file_stream = io.BytesIO(file_content)
+
+        # 音声ファイルの文字起こし
         segments, info = model.transcribe(
-            file.file,  # UploadFileのfileオブジェクトを直接渡す
+            audio=file_stream,  # BinaryIOオブジェクトを渡す
             beam_size=5,
             vad_filter=True,
             without_timestamps=True,
