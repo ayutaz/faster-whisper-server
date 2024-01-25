@@ -21,9 +21,6 @@ model = initialize_model()
 @app.post("/transcribe")
 async def transcribe_audio(file: UploadFile = Form(...)):
     try:
-        print("file type:", type(file))
-        print("file name:", file.filename)
-        print("file content_type:", file.content_type)
         # ファイルの内容をバイナリデータとして読み込む
         file_content = await file.read()
 
