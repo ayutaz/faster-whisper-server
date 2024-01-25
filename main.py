@@ -1,4 +1,4 @@
-from fastapi import FastAPI, File
+from fastapi import FastAPI, UploadFile, File
 from faster_whisper import WhisperModel
 import torch
 import os
@@ -6,22 +6,25 @@ import os
 app = FastAPI()
 
 def initialize_model():
+    model_path = "/models/whisper-large-v3"
     if torch.cuda.is_available():
         print("CUDA is available")
-        return WhisperModel("large-v3", device="cuda", compute_type="float16")
+        return WhisperModel("large-v3", device="cuda", compute_type="float16", download_root=model_path)
     else:
         print("CUDA is not available or not enabled")
         cpu_threads = os.cpu_count()
-        return WhisperModel("large-v3", device="cpu", compute_type="int8", cpu_threads=cpu_threads)
+        return WhisperModel("large-v3", device="cpu", compute_type="int8", cpu_threads=cpu_threads, download_root=model_path)
 
 model = initialize_model()
 
 @app.post("/transcribe")
-async def transcribe_audio(file: bytes = File(...)):
+async def transcribe_audio(file: UploadFile = File(...)):
     try:
-        # 音声ファイルの文字起こし
+        print("file type:", type(file))
+        print("file name:", file.filename)
+        # UploadFileのfileオブジェクトをそのまま使用
         segments, info = model.transcribe(
-            file,  # ここでバイナリデータを渡す
+            file.file,  # UploadFileのfileオブジェクトを直接渡す
             beam_size=5,
             vad_filter=True,
             without_timestamps=True,
