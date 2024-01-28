@@ -1,5 +1,5 @@
 # 指定されたNVIDIA CUDAイメージ
-FROM nvidia/cuda:11.8.0-cudnn8-devel-ubuntu22.04
+FROM nvidia/cuda:11.8.0-cudnn8-runtime-ubuntu22.04
 
 # 環境変数の設定
 ENV LANG C.UTF-8
