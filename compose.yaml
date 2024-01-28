@@ -14,7 +14,6 @@ services:
             - driver: nvidia
               count: 1
               capabilities: [ gpu ]
-    tty: true
 
 volumes:
   faster_whisper:
