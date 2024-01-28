@@ -1,6 +1,6 @@
 # faster-whisper-server
 
-faster-whisper-serverは、FastAPIを利用して構築された、効率的な音声文字起こしサーバーです。このサーバーは、faster-whisperモデルを使用して音声ファイルをテキストに変換し、API経由でその結果を提供します。
+faster-whisper-serverは、FastAPIを利用して構築された、効率的な音声文字起こしサーバーです。このサーバーは、[faster-whisper](https://github.com/SYSTRAN/faster-whisper)モデルを使用して音声ファイルをテキストに変換し、API経由でその結果を提供します。
 
 <!-- TOC -->
 
