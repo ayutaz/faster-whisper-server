@@ -3,14 +3,13 @@
 faster-whisper-serverは、FastAPIを利用して構築された、効率的な音声文字起こしサーバーです。このサーバーは、[faster-whisper](https://github.com/SYSTRAN/faster-whisper)モデルを使用して音声ファイルをテキストに変換し、API経由でその結果を提供します。
 
 <!-- TOC -->
-
 * [faster-whisper-server](#faster-whisper-server)
-    * [セットアップ（Docker使用）](#セットアップdocker使用)
-    * [サーバーの実行](#サーバーの実行)
-    * [使用方法](#使用方法)
-    * [コントリビューション](#コントリビューション)
-    * [ライセンス](#ライセンス)
-
+  * [セットアップ（Docker使用）](#セットアップdocker使用)
+  * [サーバーの実行](#サーバーの実行)
+  * [使用方法](#使用方法)
+  * [例(client_sample.py)：](#例client_samplepy)
+  * [コントリビューション](#コントリビューション)
+  * [ライセンス](#ライセンス)
 <!-- TOC -->
 
 ## セットアップ（Docker使用）
@@ -38,7 +37,7 @@ docker-compose up --build
   レスポンス：
 * transcription (string): 文字起こし結果。
 
-例(client_sample.py)：
+## 例(client_sample.py)：
 
 ```python
 import requests
