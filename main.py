@@ -1,5 +1,4 @@
 import io
-import json
 import os
 
 import torch
@@ -7,6 +6,7 @@ from fastapi import FastAPI, UploadFile, Form
 from faster_whisper import WhisperModel
 
 app = FastAPI()
+
 
 def initialize_model():
     model_path = "/models/whisper-large-v3"
@@ -22,6 +22,7 @@ def initialize_model():
 
 model = initialize_model()
 
+
 @app.post("/transcribe")
 async def transcribe_audio(file: UploadFile = Form(...)):
     try:
@@ -30,6 +31,8 @@ async def transcribe_audio(file: UploadFile = Form(...)):
 
         # バイナリデータをBinaryIOオブジェクトに変換
         file_stream = io.BytesIO(file_content)
+
+        result_text = ""
 
         # 音声ファイルの文字起こし
         segments, info = model.transcribe(
@@ -40,32 +43,12 @@ async def transcribe_audio(file: UploadFile = Form(...)):
             without_timestamps=True,
         )
 
-        # JSONオブジェクトを構築
-        response_json = {
-            "language": info.language,
-            "language_probability": info.language_probability,
-            "translations": []
-        }
-
         total_time = 0.0
         for segment in segments:
             segment_duration = segment.end - segment.start
             total_time += segment_duration
+            result_text += segment.text
+            print(f"{segment.start} - {segment.end}: {segment.text}")
 
-            response_json["translations"].append({
-                "start_time": segment.start,
-                "end_time": segment.end,
-                "duration": segment_duration,
-                "text": segment.text
-            })
-
-        response_json["total_translation_time"] = total_time
-
-        # JSON形式の文字列に変換
-        json_response = json.dumps(response_json, indent=2, ensure_ascii=False)
-
-        # JSON形式の文字列を出力（または返す）
-        print(json_response)
-        return json_response
     except Exception as e:
         return {"error": str(e)}
