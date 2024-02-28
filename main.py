@@ -12,11 +12,11 @@ def initialize_model():
     model_path = "/models/whisper-large-v3"
     if torch.cuda.is_available():
         print("CUDA is available")
-        return WhisperModel("large-v3", device="cuda", compute_type="float16", download_root=model_path)
+        return WhisperModel("large-v2", device="cuda", compute_type="float16", download_root=model_path)
     else:
         print("CUDA is not available or not enabled")
         cpu_threads = os.cpu_count()
-        return WhisperModel("large-v3", device="cpu", compute_type="int8", cpu_threads=cpu_threads,
+        return WhisperModel("large-v2", device="cpu", compute_type="int8", cpu_threads=cpu_threads,
                             download_root=model_path)
 
 
